@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private const float MaxStamina = 100f;
 
     private InputAction moveAction;
+    private bool diagonalLogged;
 
     private void Awake()
     {
@@ -28,6 +29,14 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         Vector2 input = moveAction.ReadValue<Vector2>();
+        LogFirstDiagonal(input);
+
+        // Zadanie 6: wektor dłuższy niż 1 dawałby szybszy ruch po przekątnej.
+        // Kompozyt WASD w InputSystem_Actions nie ma ustawionego trybu, więc działa
+        // domyślny DigitalNormalized i z klawiatury przekątna ma już długość 1.
+        // Bez normalizacji (W + D = (1, 1)) długość wynosiłaby √2 ≈ 1,41.
+        // ClampMagnitude zabezpiecza ruch niezależnie od ustawień akcji i urządzenia.
+        input = Vector2.ClampMagnitude(input, 1f);
         bool isMoving = input != Vector2.zero;
 
         bool wantsSprint = Keyboard.current != null
@@ -47,6 +56,17 @@ public class PlayerMovement : MonoBehaviour
         pos.x = Mathf.Clamp(pos.x, -arenaHalfSize.x, arenaHalfSize.x);
         pos.z = Mathf.Clamp(pos.z, -arenaHalfSize.y, arenaHalfSize.y);
         transform.position = pos;
+    }
+
+    private void LogFirstDiagonal(Vector2 input)
+    {
+        if (diagonalLogged || input.x == 0f || input.y == 0f)
+        {
+            return;
+        }
+
+        Debug.Log($"Długość wektora kierunku po przekątnej: {input.magnitude:F2}");
+        diagonalLogged = true;
     }
 
     private void UpdateStamina(bool sprinting)

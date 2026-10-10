@@ -74,6 +74,10 @@ Sterowanie:
 | lewy Shift         | sprint         |
 | spacja             | uderzenie      |
 
+### Zadania dodatkowe
+
+- Ruch po przekątnej (zadanie 6): `PlayerMovement` raz wypisuje długość wektora kierunku przy pierwszym ruchu po skosie i skraca wejście przez `Vector2.ClampMagnitude(input, 1f)`, więc po przekątnej gracz nie jest szybszy niż w poziomie. Kompozyt WASD akcji `Move` działa w domyślnym trybie normalizacji, więc z klawiatury długość wynosi już 1; bez niej byłoby to √2 ≈ 1,41.
+
 ## Struktura folderów
 
 ```
