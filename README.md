@@ -53,6 +53,27 @@ Skrypty w `Assets/Scripts`:
 - `Docs/L01-typowe-bledy.md` (zadanie 11): objawy i naprawa czterech częstych błędów.
 - Zadanie 9 (debuger) wykonuje się w edytorze kodu i nie zostawia plików w repozytorium.
 
+## Laboratorium 2
+
+W scenie doszły:
+
+- `Demos`: pusty obiekt ze skryptem `TypesDemo`;
+- na `Player`: skrypty `PlayerMovement` i `DamageCalculator`.
+
+Skrypty:
+
+- `TypesDemo`: w `Start` wypisuje wyniki wyrażeń z typami i operatorami (dzielenie całkowite, reszta, rzutowanie, zaokrąglanie, przepełnienie `int`, porównanie liczb zmiennoprzecinkowych, sklejanie tekstu, arytmetyka na `char`) wraz z przewidywaniem i wyjaśnieniem w komentarzach;
+- `PlayerMovement`: ruch gracza w płaszczyźnie XZ z akcji `Move` przez `transform.position`, niezależny od liczby klatek; pozycja przycinana do granic areny (`arenaHalfSize` 8,5 × 4,5); sprint z wytrzymałością 0–100 (−30/s podczas sprintu, +15/s bez), po wyczerpaniu sprint wraca powyżej 25; wytrzymałość widać w Inspectorze;
+- `DamageCalculator`: po spacji liczy obrażenia (bazowe × mnożnik broni, krytyk 20% podwaja, co trzecie uderzenie +5, zaokrąglenie) i wypisuje numer uderzenia, krytyk i wynik.
+
+Sterowanie:
+
+| Klawisz            | Akcja          |
+|--------------------|----------------|
+| W/A/S/D, strzałki  | ruch           |
+| lewy Shift         | sprint         |
+| spacja             | uderzenie      |
+
 ## Struktura folderów
 
 ```
