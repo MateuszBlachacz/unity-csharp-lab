@@ -88,6 +88,7 @@ Assets/
   Scripts/     skrypty C#
   Settings/    ustawienia URP z szablonu
 Docs/          notatki do laboratoriów
+Wyklady/       przykłady kodu z wykładów 1 i 2 (poza Assets, Unity ich nie kompiluje)
 Packages/      lista pakietów
 ProjectSettings/
 ```
