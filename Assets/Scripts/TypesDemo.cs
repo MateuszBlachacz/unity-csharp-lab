@@ -71,6 +71,8 @@ public class TypesDemo : MonoBehaviour
         Debug.Log($"0.1 + 0.2 == 0.3: {0.1 + 0.2 == 0.3}");
 
         ShowTypes();
+        // Na samym końcu, bo blok checked przerywa metodę wyjątkiem.
+        OverflowDemo();
 
         // Próby zmiany stałej i pola readonly (usunięte, bo się nie kompilują):
         // MaxLives = 6;               błąd: do stałej nie można niczego przypisać, jej wartość ustala kompilator
@@ -96,5 +98,29 @@ public class TypesDemo : MonoBehaviour
         Debug.Log($"Życia: {lives}, prędkość: {speed}, imię: {playerName}, żyje: {isAlive}, klawisz: {actionKey}, " +
                   $"ranking: {rankingPoints}, cena: {price}, moneta: {coinPosition}, kolor: {coinColor}");
         Debug.Log($"MaxLives = {MaxLives}, createdAt = {createdAt}");
+    }
+
+    // Zadanie 12 ★: przepełnienie i precyzja pod kontrolą.
+    // Domyślnie przepełnienie int „zawija się” bez błędu. W bloku checked zgłasza OverflowException,
+    // który pojawia się w konsoli jako błąd i przerywa metodę. decimal liczy ułamki dziesiętne dokładnie,
+    // więc nadaje się do pieniędzy; w grze do pozycji, prędkości i czasu używamy float (szybszy,
+    // a tego wymaga API Unity), porównując go z tolerancją.
+    private void OverflowDemo()
+    {
+        Debug.Log($"0.1m + 0.2m == 0.3m: {0.1m + 0.2m == 0.3m}");
+
+        double a = 0.1 + 0.2;
+        double c = 0.3;
+        Debug.Log($"|0.1 + 0.2 - 0.3| < 1e-9: {System.Math.Abs(a - c) < 1e-9}");
+
+        float x = 0.1f + 0.2f;
+        Debug.Log($"Mathf.Approximately(0.1f + 0.2f, 0.3f): {Mathf.Approximately(x, 0.3f)}");
+
+        int big = int.MaxValue;
+        checked
+        {
+            big = big + 1;
+        }
+        Debug.Log($"Ta linia się nie wykona: {big}");
     }
 }

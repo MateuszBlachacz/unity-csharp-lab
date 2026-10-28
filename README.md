@@ -71,6 +71,13 @@ Skrypty w `Assets/Scripts`:
 
 Sterowanie: WASD lub strzałki – ruch, lewy Shift – sprint, spacja – uderzenie, K – raport `LogicDemo` (gdy `Demos` jest włączony).
 
+### Zadania dodatkowe
+
+- Ruch po przekątnej (zadanie 9): wejście skracane przez `Vector2.ClampMagnitude(input, 1f)`. Kompozyt WASD akcji `Move` działa w domyślnym trybie *Digital Normalized*, więc klawiatura daje po skosie długość 1 już bez poprawki; poprawka chroni przed trybem *Digital* i nie spowalnia lekkiego wychylenia drążka.
+- Granice w edytorze (zadanie 10): `OnDrawGizmosSelected` w `PlayerMovement` rysuje żółtą ramkę dozwolonego obszaru po zaznaczeniu gracza.
+- Rozpędzanie i hamowanie (zadanie 11): pole `acceleration` (20 j/s²); bieżąca prędkość zbliża się do docelowej przez `Vector3.MoveTowards`, a przy krawędzi areny zeruje się jej składowa w tej osi.
+- Przepełnienie i precyzja (zadanie 12): `OverflowDemo()` w `TypesDemo` porównuje `decimal`, `double` z tolerancją i `Mathf.Approximately`, a na końcu celowo przepełnia `int` w bloku `checked` (wyjątek `OverflowException` w konsoli).
+
 ## Struktura folderów
 
 ```

@@ -170,6 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 5
+  acceleration: 20
   arenaHalfSize: {x: 8.5, y: 4.5}
   sprintMultiplier: 1.8
   staminaDrain: 30
