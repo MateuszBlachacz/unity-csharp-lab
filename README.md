@@ -22,6 +22,7 @@ Każde laboratorium ma osobną gałąź nazwaną od jego numeru:
 | `main`   | punkt startowy: pusty projekt Universal 3D       |
 | `lab-01` | Laboratorium 1: scena areny i pierwsze skrypty   |
 | `lab-02` | Laboratorium 2: typy, operatory i ruch gracza    |
+| `lab-03` | Laboratorium 3: zbieranie monet i reguły gry      |
 
 Kolejne laboratoria trafiają na gałęzie `lab-02`, `lab-03` itd., odgałęzione od poprzedniego laboratorium.
 
@@ -77,6 +78,24 @@ Sterowanie: WASD lub strzałki – ruch, lewy Shift – sprint, spacja – uderz
 - Granice w edytorze (zadanie 10): `OnDrawGizmosSelected` w `PlayerMovement` rysuje żółtą ramkę dozwolonego obszaru po zaznaczeniu gracza.
 - Rozpędzanie i hamowanie (zadanie 11): pole `acceleration` (20 j/s²); bieżąca prędkość zbliża się do docelowej przez `Vector3.MoveTowards`, a przy krawędzi areny zeruje się jej składowa w tej osi.
 - Przepełnienie i precyzja (zadanie 12): `OverflowDemo()` w `TypesDemo` porównuje `decimal`, `double` z tolerancją i `Mathf.Approximately`, a na końcu celowo przepełnia `int` w bloku `checked` (wyjątek `OverflowException` w konsoli).
+
+## Laboratorium 3
+
+Scena `Assets/Scenes/Arena.unity`:
+
+- `Player`: tag `Player`, `Rigidbody` z *Is Kinematic* (potrzebny do zdarzeń triggerów) i skrypt `PlayerCollector`;
+- `GameManager`: nowy obiekt ze skryptami `GameScore` i `CoinSpawner`; utworzone monety stają się jego dziećmi;
+- monety `Coins` z L1 i obiekt `CoinRing` zostały usunięte ze sceny (skrypty `CoinRing` i `LifecycleLogger` zostają w projekcie).
+
+Prefab `Assets/Prefabs/Coin.prefab`: tag `Coin`, collider z *Is Trigger*, skrypty `Spinner` i `Coin`.
+
+Skrypty w `Assets/Scripts`:
+
+- `CoinType`: typ wyliczeniowy `Bronze`, `Silver`, `Gold`;
+- `Coin` (zadanie 2): pole typu `CoinType`; `GetValue()` zwraca 1, 3 lub 10 punktów (wyrażenie `switch`), a `Start` ustawia kolor monety (instrukcja `switch`);
+- `PlayerCollector` (zadania 1 i 3): w `OnTriggerEnter` rozpoznaje monetę po tagu, dodaje jej wartość przez `GameScore.AddPoints(int, string)` i niszczy ją;
+- `GameScore` (zadania 3 i 5): wynik z metodami `AddPoints(int)`, przeciążonym `AddPoints(int, string)` i `GetScore()`; ujemne wartości są pomijane z ostrzeżeniem. Tu liczone są też zebrane monety: po zebraniu wszystkich utworzonych pojawia się jeden komunikat o wygranej z czasem gry z dokładnością do 0,1 s;
+- `CoinSpawner` (zadanie 4): na starcie tworzy 10 monet w losowych miejscach areny, nie bliżej niż 2 jednostki od gracza; na monetę przypada najwyżej 20 prób, potem jest pomijana z ostrzeżeniem; typ każdej monety jest losowy; liczbę faktycznie utworzonych monet przekazuje do `GameScore`.
 
 ## Struktura folderów
 
