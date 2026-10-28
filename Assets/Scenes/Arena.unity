@@ -923,6 +923,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e55f201f2c41ad903ff76ffe4dcdd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameScore
+  comboWindow: 1.5
 --- !u!114 &1500000014
 MonoBehaviour:
   m_ObjectHideFlags: 0

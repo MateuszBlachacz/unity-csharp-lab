@@ -97,6 +97,12 @@ Skrypty w `Assets/Scripts`:
 - `GameScore` (zadania 3 i 5): wynik z metodami `AddPoints(int)`, przeciążonym `AddPoints(int, string)` i `GetScore()`; ujemne wartości są pomijane z ostrzeżeniem. Tu liczone są też zebrane monety: po zebraniu wszystkich utworzonych pojawia się jeden komunikat o wygranej z czasem gry z dokładnością do 0,1 s;
 - `CoinSpawner` (zadanie 4): na starcie tworzy 10 monet w losowych miejscach areny, nie bliżej niż 2 jednostki od gracza; na monetę przypada najwyżej 20 prób, potem jest pomijana z ostrzeżeniem; typ każdej monety jest losowy; liczbę faktycznie utworzonych monet przekazuje do `GameScore`.
 
+### Zadania dodatkowe
+
+- Losowanie z wagami (zadanie 6): `CoinSpawner.RollCoinType()` losuje brązowe w 60%, srebrne w 30% i złote w 10% przypadków. Test 1000 losowań uruchomisz z menu kontekstowego komponentu `CoinSpawner` (trzy kropki w Inspectorze → *Test losowania 1000 typów*).
+- Seria monet (zadanie 7): `PlayerCollector` wywołuje `GameScore.AddCoinPoints`. Moneta zebrana w ciągu `comboWindow` (1,5 s) od poprzedniej podnosi mnożnik serii o 1, najwyżej do x3; po dłuższej przerwie mnożnik wraca do x1. Nowy mnożnik liczy czysta metoda `NextMultiplier`.
+- Ranga za czas (zadanie 8): po wygranej `GetRank` (wyrażenie `switch` z wzorcami relacyjnymi) przyznaje rangę S < 20 s, A < 35 s, B < 60 s albo C, a `GetRankBonus` (instrukcja `switch`) dodaje premię 50/25/10/0 punktów. Komunikat o wygranej podaje czas, rangę i wynik końcowy.
+
 ## Struktura folderów
 
 ```

@@ -55,9 +55,42 @@ public class CoinSpawner : MonoBehaviour
         return Vector3.Distance(pos, playerPos) < minDistanceFromPlayer;
     }
 
+    // Zadanie 6 ★: brązowe 60%, srebrne 30%, złote 10%.
     private CoinType RollCoinType()
     {
-        // Random.Range dla int nie losuje górnej granicy, więc wynik to 0, 1 albo 2.
-        return (CoinType)Random.Range(0, 3);
+        float r = Random.value;
+        if (r < 0.6f)
+        {
+            return CoinType.Bronze;
+        }
+        if (r < 0.9f)
+        {
+            return CoinType.Silver;
+        }
+        return CoinType.Gold;
+    }
+
+    [ContextMenu("Test losowania 1000 typów")]
+    private void TestRoll()
+    {
+        int bronze = 0;
+        int silver = 0;
+        int gold = 0;
+        for (int i = 0; i < 1000; i++)
+        {
+            switch (RollCoinType())
+            {
+                case CoinType.Bronze:
+                    bronze++;
+                    break;
+                case CoinType.Silver:
+                    silver++;
+                    break;
+                case CoinType.Gold:
+                    gold++;
+                    break;
+            }
+        }
+        Debug.Log($"1000 losowań: brązowe {bronze}, srebrne {silver}, złote {gold}");
     }
 }

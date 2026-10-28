@@ -18,7 +18,7 @@ public class PlayerCollector : MonoBehaviour
             return;
         }
 
-        score.AddPoints(coin.GetValue(), $"moneta {coin.Type}");
+        score.AddCoinPoints(coin.GetValue());
         score.CoinCollected();
         Destroy(other.gameObject);
     }
