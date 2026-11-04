@@ -951,6 +951,7 @@ MonoBehaviour:
   - {fileID: 7682256197404370132, guid: 51f6c2cbc88d45d292104fe47cec9951, type: 3}
   - {fileID: 7682256197404370133, guid: cb25f4dcad86482bab3f6426650e8ba7, type: 3}
   score: {fileID: 1500000013}
+  arena: {fileID: 1600000013}
   count: 5
 --- !u!114 &74777430
 MonoBehaviour:
@@ -1101,6 +1102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b593f81df6b845fcaf2cfae681ec6b99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ArenaBuilder
+  level: 0
   wallPrefab: {fileID: 4410000000000000001, guid: 211da8d14db149318c1d74c1257c8a67, type: 3}
   wallsParent: {fileID: 1600000015}
   cellSize: 1

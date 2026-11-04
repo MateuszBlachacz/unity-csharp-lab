@@ -8,24 +8,28 @@ public class CoinSpawner : MonoBehaviour
     // Kolejność jak w CoinType: brązowa, srebrna, złota.
     [SerializeField] private GameObject[] coinPrefabs;
     [SerializeField] private GameScore score;
+    // Zadanie 6 ★: punkty w ścianach lub poza wybranym poziomem są pomijane.
+    [SerializeField] private ArenaBuilder arena;
     [SerializeField] private int count = 5;
 
     private void Start()
     {
+        Transform[] freePoints = FreeSpawnPoints();
+
         int toSpawn = count;
-        if (toSpawn > spawnPoints.Length)
+        if (toSpawn > freePoints.Length)
         {
-            Debug.LogWarning($"Za mało punktów spawnu: {spawnPoints.Length} na {count} monet. Tworzę {spawnPoints.Length}.");
-            toSpawn = spawnPoints.Length;
+            Debug.LogWarning($"Za mało punktów spawnu: {freePoints.Length} na {count} monet. Tworzę {freePoints.Length}.");
+            toSpawn = freePoints.Length;
         }
 
-        int[] order = ShuffledIndices(spawnPoints.Length);
+        int[] order = ShuffledIndices(freePoints.Length);
         int spawnedCount = 0;
 
         // Pierwsze toSpawn indeksów z przetasowanej tablicy to różne punkty spawnu.
         for (int i = 0; i < toSpawn; i++)
         {
-            Transform point = spawnPoints[order[i]];
+            Transform point = freePoints[order[i]];
             GameObject prefab = coinPrefabs[RollPrefabIndex()];
             Instantiate(prefab, point.position, prefab.transform.rotation, transform);
             spawnedCount++;
@@ -33,6 +37,41 @@ public class CoinSpawner : MonoBehaviour
 
         score.SetCoinTotal(spawnedCount);
         Debug.Log($"Utworzono monet: {spawnedCount} z {count}");
+    }
+
+    // Zadanie 6 ★: nowa tablica tylko z punktami na wolnych polach. Najpierw liczymy,
+    // ile ich jest, bo rozmiaru tablicy nie da się potem zmienić.
+    private Transform[] FreeSpawnPoints()
+    {
+        if (arena == null)
+        {
+            return spawnPoints;
+        }
+
+        int freeCount = 0;
+        foreach (Transform point in spawnPoints)
+        {
+            if (arena.IsFreeCell(point.position))
+            {
+                freeCount++;
+            }
+        }
+
+        Transform[] free = new Transform[freeCount];
+        int next = 0;
+        foreach (Transform point in spawnPoints)
+        {
+            if (arena.IsFreeCell(point.position))
+            {
+                free[next] = point;
+                next++;
+            }
+            else
+            {
+                Debug.Log($"{point.name} leży w ścianie lub poza poziomem, pomijam go.");
+            }
+        }
+        return free;
     }
 
     // Zadanie 3 (L4): tablica indeksów 0..n-1 przetasowana algorytmem Fishera–Yatesa.

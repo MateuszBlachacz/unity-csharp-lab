@@ -130,6 +130,11 @@ Skrypty w `Assets/Scripts`:
 
 Sterowanie: doszedł klawisz `Tab` – statystyki zebranych monet w konsoli.
 
+### Zadania dodatkowe
+
+- Drugi poziom w tablicy postrzępionej (zadanie 6): `ArenaBuilder` ma drugi poziom zapisany jako `int[][] level2` w kształcie litery L (dwa górne wiersze mają 8 komórek, pozostałe 12). Pole `level` (typ `LevelChoice`: `Level1`, `Level2`) w Inspectorze obiektu `Level` wybiera poziom. Liczbę wierszy daje `level2.Length`, a długość wiersza `level2[row].Length`; arena jest wyśrodkowana według najdłuższego wiersza. Gracz startuje w (0, 1, 0), czyli na wolnym polu obu poziomów.
+- Punkty spawnu monet: zamiast osobnego zestawu punktów dla każdego poziomu `CoinSpawner` dostał referencję do `ArenaBuilder` i pomija punkty, które według tablicy wybranego poziomu leżą w ścianie albo poza mapą (`ArenaBuilder.IsFreeCell`), z komunikatem w konsoli. W poziomie 2 odpada `SpawnPoint_3` (prawy górny róg poza literą L), zostaje 7 punktów na 5 monet. Sprawdzanie korzysta tylko z tablicy, więc nie zależy od tego, czy ściany są już zbudowane.
+
 ## Struktura folderów
 
 ```
