@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 // Wynik i warunek wygranej z L3. Liczba zebranych monet jest liczona tutaj,
 // a liczbę utworzonych monet podaje CoinSpawner.
@@ -16,6 +17,18 @@ public class GameScore : MonoBehaviour
     private int coinsTotal;
     private int coinsCollected;
     private bool gameWon;
+    // Zadanie 5 (L4): liczba zebranych monet każdego typu, indeks to (int)CoinType.
+    private readonly int[] countByType = new int[System.Enum.GetValues(typeof(CoinType)).Length];
+    // Suma wartości bazowych zebranych monet (bez mnożnika serii) do średniej.
+    private int collectedValue;
+
+    private void Update()
+    {
+        if (Keyboard.current.tabKey.wasPressedThisFrame)
+        {
+            LogCoinStats();
+        }
+    }
 
     public void AddPoints(int amount)
     {
@@ -58,9 +71,11 @@ public class GameScore : MonoBehaviour
         coinsTotal = total;
     }
 
-    public void CoinCollected()
+    public void CoinCollected(Coin coin)
     {
         coinsCollected++;
+        countByType[(int)coin.Type]++;
+        collectedValue += coin.GetValue();
 
         // Flaga gameWon gwarantuje jeden komunikat, nawet gdy dwie ostatnie monety
         // zostaną zebrane w tej samej klatce.
@@ -97,5 +112,19 @@ public class GameScore : MonoBehaviour
             default:
                 return 0;
         }
+    }
+
+    private void LogCoinStats()
+    {
+        int total = 0;
+        for (int i = 0; i < countByType.Length; i++)
+        {
+            Debug.Log($"{(CoinType)i}: {countByType[i]}");
+            total += countByType[i];
+        }
+
+        // Dzielenie przez float, bo int / int obcięłoby część ułamkową.
+        string average = total > 0 ? $"{collectedValue / (float)total:F2}" : "brak";
+        Debug.Log($"Razem monet: {total} (licznik zebranych: {coinsCollected}), średnia wartość: {average}");
     }
 }

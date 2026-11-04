@@ -1,33 +1,33 @@
 using UnityEngine;
 
-// Losowe rozmieszczenie monet z L3.
+// Monety w losowo wybranych punktach spawnu (L4). Typ monety wynika z wybranego prefabu.
 public class CoinSpawner : MonoBehaviour
 {
-    private const int MaxAttempts = 20;
-
-    [SerializeField] private GameObject coinPrefab;
-    [SerializeField] private Transform player;
+    // Puste obiekty na wolnych polach areny.
+    [SerializeField] private Transform[] spawnPoints;
+    // Kolejność jak w CoinType: brązowa, srebrna, złota.
+    [SerializeField] private GameObject[] coinPrefabs;
     [SerializeField] private GameScore score;
-    [SerializeField] private int count = 10;
-    [SerializeField] private float minDistanceFromPlayer = 2f;
-    // Te same granice co ruch gracza w L2.
-    [SerializeField] private Vector2 arenaHalfSize = new Vector2(8.5f, 4.5f);
-    [SerializeField] private float coinHeight = 0.8f;
-
-    private int spawnedCount;
+    [SerializeField] private int count = 5;
 
     private void Start()
     {
-        for (int i = 0; i < count; i++)
+        int toSpawn = count;
+        if (toSpawn > spawnPoints.Length)
         {
-            if (!TryFindPosition(out Vector3 pos))
-            {
-                Debug.LogWarning($"Moneta {i + 1}: brak wolnego miejsca po {MaxAttempts} próbach, pomijam ją.");
-                continue;
-            }
+            Debug.LogWarning($"Za mało punktów spawnu: {spawnPoints.Length} na {count} monet. Tworzę {spawnPoints.Length}.");
+            toSpawn = spawnPoints.Length;
+        }
 
-            GameObject coinObject = Instantiate(coinPrefab, pos, coinPrefab.transform.rotation, transform);
-            coinObject.GetComponent<Coin>().SetType(RollCoinType());
+        int[] order = ShuffledIndices(spawnPoints.Length);
+        int spawnedCount = 0;
+
+        // Pierwsze toSpawn indeksów z przetasowanej tablicy to różne punkty spawnu.
+        for (int i = 0; i < toSpawn; i++)
+        {
+            Transform point = spawnPoints[order[i]];
+            GameObject prefab = coinPrefabs[RollPrefabIndex()];
+            Instantiate(prefab, point.position, prefab.transform.rotation, transform);
             spawnedCount++;
         }
 
@@ -35,27 +35,36 @@ public class CoinSpawner : MonoBehaviour
         Debug.Log($"Utworzono monet: {spawnedCount} z {count}");
     }
 
-    private bool TryFindPosition(out Vector3 pos)
+    // Zadanie 3 (L4): tablica indeksów 0..n-1 przetasowana algorytmem Fishera–Yatesa.
+    private int[] ShuffledIndices(int n)
     {
-        int attempts = 0;
-        do
+        int[] order = new int[n];
+        for (int i = 0; i < order.Length; i++)
         {
-            pos = new Vector3(Random.Range(-arenaHalfSize.x, arenaHalfSize.x), coinHeight,
-                              Random.Range(-arenaHalfSize.y, arenaHalfSize.y));
-            attempts++;
-        } while (IsTooCloseToPlayer(pos) && attempts < MaxAttempts);
+            order[i] = i;
+        }
 
-        return !IsTooCloseToPlayer(pos);
+        for (int i = order.Length - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);   // górna granica wyłączna, więc j może być równe i
+            (order[i], order[j]) = (order[j], order[i]);
+        }
+
+        return order;
     }
 
-    private bool IsTooCloseToPlayer(Vector3 pos)
+    // Gdy prefabów jest tyle, ile typów monet, zostaje losowanie z wagami z L3;
+    // przy innej liczbie każdy prefab ma tę samą szansę.
+    private int RollPrefabIndex()
     {
-        Vector3 playerPos = player.position;
-        playerPos.y = pos.y;   // odległość liczymy w poziomie
-        return Vector3.Distance(pos, playerPos) < minDistanceFromPlayer;
+        if (coinPrefabs.Length == System.Enum.GetValues(typeof(CoinType)).Length)
+        {
+            return (int)RollCoinType();
+        }
+        return Random.Range(0, coinPrefabs.Length);
     }
 
-    // Zadanie 6 ★: brązowe 60%, srebrne 30%, złote 10%.
+    // Zadanie 6 ★ z L3: brązowe 60%, srebrne 30%, złote 10%.
     private CoinType RollCoinType()
     {
         float r = Random.value;

@@ -23,6 +23,7 @@ Każde laboratorium ma osobną gałąź nazwaną od jego numeru:
 | `lab-01` | Laboratorium 1: scena areny i pierwsze skrypty   |
 | `lab-02` | Laboratorium 2: typy, operatory i ruch gracza    |
 | `lab-03` | Laboratorium 3: zbieranie monet i reguły gry      |
+| `lab-04` | Laboratorium 4: tablice, arena z tablicy 2D       |
 
 Kolejne laboratoria trafiają na gałęzie `lab-02`, `lab-03` itd., odgałęzione od poprzedniego laboratorium.
 
@@ -103,12 +104,38 @@ Skrypty w `Assets/Scripts`:
 - Seria monet (zadanie 7): `PlayerCollector` wywołuje `GameScore.AddCoinPoints`. Moneta zebrana w ciągu `comboWindow` (1,5 s) od poprzedniej podnosi mnożnik serii o 1, najwyżej do x3; po dłuższej przerwie mnożnik wraca do x1. Nowy mnożnik liczy czysta metoda `NextMultiplier`.
 - Ranga za czas (zadanie 8): po wygranej `GetRank` (wyrażenie `switch` z wzorcami relacyjnymi) przyznaje rangę S < 20 s, A < 35 s, B < 60 s albo C, a `GetRankBonus` (instrukcja `switch`) dodaje premię 50/25/10/0 punktów. Komunikat o wygranej podaje czas, rangę i wynik końcowy.
 
+## Laboratorium 4
+
+Scena `Assets/Scenes/Arena.unity`:
+
+- `Player`: `Rigidbody` już nie kinematyczny, z interpolacją i *Freeze Rotation* X, Y, Z (kapsuła się nie przewraca); nowy skrypt `CoinFinder` i dziecko `Arrow` (spłaszczony sześcian z materiałem `M_Arrow`, bez collidera);
+- `Level`: nowy obiekt ze skryptem `ArenaBuilder`; jego dziecko `Walls` zbiera wszystkie ściany tworzone na starcie gry;
+- `CoinSpawnPoints`: 8 pustych obiektów `SpawnPoint_1…8` na wolnych polach mapy (wysokość 0,8);
+- `GameManager`: `CoinSpawner` korzysta z punktów spawnu i trzech prefabów monet, domyślnie tworzy 5 monet.
+
+Prefaby i materiały:
+
+- `Assets/Prefabs/Wall.prefab`: sześcian 1 × 1 × 1 z `BoxCollider`, materiał `M_Wall` (jaśniejszy szary niż podłoga), tag `Wall`;
+- `Coin_Bronze`, `Coin_Silver`, `Coin_Gold`: warianty prefabu `Coin` z ustawionym typem.
+
+Skrypty w `Assets/Scripts`:
+
+- `PlayerMovement` (zadanie 1): wejście i sprint z wytrzymałością liczone w `Update`, prędkość ustawiana w `FixedUpdate` przez `rb.linearVelocity` z zachowaniem składowej `y` (grawitacja). Ograniczanie pozycji z L2, pole `arenaHalfSize` i ramka `OnDrawGizmosSelected` zostały usunięte, bo gracza zatrzymują ściany. Z zadań ★ L2 zostały `ClampMagnitude` na wejściu i rozpędzanie (`Vector3.MoveTowards` na poziomej prędkości ciała). `measuredSpeed` to długość poziomej składowej `rb.linearVelocity`;
+- `ArenaBuilder` (zadanie 2): mapa 7 × 12 zapisana w polu `private readonly int[,] map` (1 – ściana, 0 – puste pole); w `Start` tworzy ściany z prefabu jako dzieci `Walls`, na wysokości 0,5, z rozmiarem komórki `cellSize` (1). Arena jest wyśrodkowana na (0, 0, 0), a pierwszy wiersz tablicy to najdalszy rząd (największe Z);
+- `CoinSpawner` (zadanie 3): tablice `Transform[] spawnPoints` i `GameObject[] coinPrefabs`; tasuje indeksy punktów algorytmem Fishera–Yatesa i bierze pierwsze `count`, więc w jednym punkcie nie powstaną dwie monety. Gdy `count` jest większe od liczby punktów, wypisuje ostrzeżenie i tworzy tyle monet, ile jest punktów. Przy trzech prefabach (kolejność jak w `CoinType`) zostaje losowanie z wagami 60/30/10 z L3;
+- `CoinFinder` (zadanie 4): w każdej klatce pobiera monety przez `FindGameObjectsWithTag("Coin")`, szuka najbliższej, rysuje do niej żółtą linię `Debug.DrawLine` (widok Scene albo Game z włączonymi *Gizmos*) i obraca strzałkę w poziomie w jej stronę, przesuwając ją wokół gracza. Gdy monet nie ma, strzałka się chowa;
+- `Coin`: właściwość tylko do odczytu `Type`;
+- `GameScore` (zadanie 5): tablica `int[] countByType` o długości równej liczbie typów monet, liczona w `CoinCollected(Coin)`; klawisz `Tab` wypisuje liczbę monet każdego typu, łączną liczbę i średnią wartość zebranej monety (przy zerze monet „brak”);
+- `PlayerCollector`: przekazuje zebraną monetę do `GameScore.CoinCollected`.
+
+Sterowanie: doszedł klawisz `Tab` – statystyki zebranych monet w konsoli.
+
 ## Struktura folderów
 
 ```
 Assets/
-  Materials/   materiały M_Floor, M_Player, M_Coin
-  Prefabs/     prefab monety
+  Materials/   materiały M_Floor, M_Player, M_Coin, M_Wall, M_Arrow
+  Prefabs/     prefab monety, jego warianty i prefab ściany
   Scenes/      scena Arena
   Scripts/     skrypty C#
   Settings/    ustawienia URP z szablonu
