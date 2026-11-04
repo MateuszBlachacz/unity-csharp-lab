@@ -24,6 +24,7 @@ Każde laboratorium ma osobną gałąź nazwaną od jego numeru:
 | `lab-02` | Laboratorium 2: typy, operatory i ruch gracza    |
 | `lab-03` | Laboratorium 3: zbieranie monet i reguły gry      |
 | `lab-04` | Laboratorium 4: tablice, arena z tablicy 2D       |
+| `lab-05` | Laboratorium 5: poziom z pliku tekstowego i HUD   |
 
 Kolejne laboratoria trafiają na gałęzie `lab-02`, `lab-03` itd., odgałęzione od poprzedniego laboratorium.
 
@@ -135,11 +136,38 @@ Sterowanie: doszedł klawisz `Tab` – statystyki zebranych monet w konsoli.
 - Drugi poziom w tablicy postrzępionej (zadanie 6): `ArenaBuilder` ma drugi poziom zapisany jako `int[][] level2` w kształcie litery L (dwa górne wiersze mają 8 komórek, pozostałe 12). Pole `level` (typ `LevelChoice`: `Level1`, `Level2`) w Inspectorze obiektu `Level` wybiera poziom. Liczbę wierszy daje `level2.Length`, a długość wiersza `level2[row].Length`; arena jest wyśrodkowana według najdłuższego wiersza. Gracz startuje w (0, 1, 0), czyli na wolnym polu obu poziomów.
 - Punkty spawnu monet: zamiast osobnego zestawu punktów dla każdego poziomu `CoinSpawner` dostał referencję do `ArenaBuilder` i pomija punkty, które według tablicy wybranego poziomu leżą w ścianie albo poza mapą (`ArenaBuilder.IsFreeCell`), z komunikatem w konsoli. W poziomie 2 odpada `SpawnPoint_3` (prawy górny róg poza literą L), zostaje 7 punktów na 5 monet. Sprawdzanie korzysta tylko z tablicy, więc nie zależy od tego, czy ściany są już zbudowane.
 
+## Laboratorium 5
+
+Przy pierwszym otwarciu sceny Unity zapyta o *TMP Essentials*: kliknij *Import TMP Essentials* (folder `Assets/TextMesh Pro` nie jest w repozytorium, a teksty interfejsu korzystają z domyślnej czcionki TextMeshPro).
+
+Scena `Assets/Scenes/Arena.unity`:
+
+- `Level`: nowy skrypt `LevelLoader`; komponent `ArenaBuilder` jest **wyłączony** (zostaje w projekcie); nowe dziecko `Coins` zbiera monety z pliku poziomu;
+- `GameManager`: komponent `CoinSpawner` jest **wyłączony**, monety tworzy teraz `LevelLoader`;
+- `Canvas` (Screen Space – Overlay, *Canvas Scaler* „Scale With Screen Size” 1920 × 1080) ze skryptem `Hud`:
+  - `HudText`: wynik i czas, zakotwiczony w lewym górnym rogu;
+  - `WinText`: gratulacje na środku ekranu, ukryty do wygranej;
+  - `StartPanel`: pole `NameInput` (TMP Input Field), przycisk `StartButton` (On Click → `PlayerNameForm.OnStartClicked`) i `ErrorText` na komunikaty o błędach;
+- `EventSystem` z `InputSystemUIInputModule` (obsługa myszy i klawiatury w UI przez Input System).
+
+Plik `Assets/Levels/level1.txt`: mapa 7 × 12, po jednym znaku na komórkę (`#` ściana, `.` puste pole, `C` moneta, `P` start gracza).
+
+Skrypty w `Assets/Scripts`:
+
+- `GridMath`: statyczna metoda `CellToWorld` przelicza (wiersz, kolumna) na pozycję w świecie; korzystają z niej `ArenaBuilder` i `LevelLoader`;
+- `LevelLoader` (zadania 1–2): dzieli `levelFile.text` na wiersze (`Split('\n')`, potem `TrimEnd('\r')` dla plików z Windowsa), pomija puste wiersze i sprawdza plik. Osobne komunikaty dostają: wiersz o innej długości niż pierwszy, brak `P`, więcej niż jedno `P`, brak monet i nieznany znak (z numerem wiersza i kolumny w pliku, od 1). Przy błędach poziom się nie buduje. Poprawny plik daje ściany, monety losowego typu i gracza w miejscu `P` (Y = 1); liczba monet do wygranej trafia do `GameScore`;
+- `Hud` (zadanie 3): co klatkę pisze `Wynik: {wynik:D4}   Czas: {czas:F1} s` (format `F1` bierze separator z ustawień regionalnych, w polskim systemie przecinek); po wygranej zatrzymuje czas i pokazuje `Gratulacje, <nazwa>!`;
+- `PlayerNameForm` (zadanie 4): do czasu poprawnej nazwy gra stoi (`Time.timeScale = 0`). Po kliknięciu *Start* nazwa jest obcinana (`Trim`), musi mieć 3–12 znaków i składać się z liter, cyfr lub `_` (`char.IsLetterOrDigit`, więc polskie litery są dozwolone); pierwsza litera staje się wielka. Każdy błąd ma własny komunikat pod polem: `"ab"` – za krótka, `"jan kowalski"` – spacja w środku, `"zażółć!"` – niedozwolony znak `!`; `"  ola_2 "` daje `Ola_2`. Przykłady z karty sprawdzisz z menu kontekstowego komponentu (*Test przykładów z karty*);
+- `GameScore` (zadanie 5): przechowuje nazwę gracza i podaje ją w komunikacie o wygranej; dziennik w `StringBuilder` dostaje przy każdej monecie linię `[czas] Typ +wartość`; klawisz `L` wypisuje cały dziennik i liczbę wpisów ze słowem `Gold`.
+
+Sterowanie: doszedł klawisz `L` – dziennik zebranych monet w konsoli.
+
 ## Struktura folderów
 
 ```
 Assets/
   Materials/   materiały M_Floor, M_Player, M_Coin, M_Wall, M_Arrow
+  Levels/      poziomy w plikach tekstowych
   Prefabs/     prefab monety, jego warianty i prefab ściany
   Scenes/      scena Arena
   Scripts/     skrypty C#

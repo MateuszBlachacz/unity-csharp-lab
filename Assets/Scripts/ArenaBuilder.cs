@@ -56,7 +56,8 @@ public class ArenaBuilder : MonoBehaviour
                     continue;
                 }
 
-                Instantiate(wallPrefab, CellToWorld(row, col, rows, cols), Quaternion.identity, wallsParent);
+                Vector3 pos = GridMath.CellToWorld(row, col, rows, cols, cellSize, wallHeight);
+                Instantiate(wallPrefab, pos, Quaternion.identity, wallsParent);
                 built++;
             }
         }
@@ -96,14 +97,5 @@ public class ArenaBuilder : MonoBehaviour
             max = Mathf.Max(max, RowLength(row));
         }
         return max;
-    }
-
-    // Wiersz rośnie „w dół” mapy, a Z w głąb sceny, dlatego Z liczymy z odwróceniem.
-    // Odjęcie (n - 1) / 2 wyśrodkowuje arenę względem punktu (0, 0, 0).
-    private Vector3 CellToWorld(int row, int col, int rows, int cols)
-    {
-        float x = (col - (cols - 1) / 2f) * cellSize;
-        float z = ((rows - 1) / 2f - row) * cellSize;
-        return new Vector3(x, wallHeight, z);
     }
 }
