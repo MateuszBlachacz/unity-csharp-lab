@@ -19,9 +19,30 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private float wallHeight = 0.5f;
     [SerializeField] private float coinHeight = 0.8f;
 
+    // Zadanie 6 ★: numer wczytanego poziomu; plik z Inspectora to poziom 1.
+    public int CurrentLevel { get; private set; } = 1;
+
     private void Start()
     {
         Build(levelFile);
+    }
+
+    // Zadanie 6 ★: poziom z folderu Assets/Resources/Levels, nazwa pliku zbudowana z numeru.
+    // Resources.Load przyjmuje ścieżkę względem folderu Resources i bez rozszerzenia .txt.
+    public void LoadLevel(int number)
+    {
+        string path = $"Levels/level{number}";
+        TextAsset file = Resources.Load<TextAsset>(path);
+        if (file == null)
+        {
+            Debug.LogError($"Nie znaleziono poziomu '{path}' w folderze Resources.");
+            return;
+        }
+
+        if (Build(file))
+        {
+            CurrentLevel = number;
+        }
     }
 
     // Zwraca false, gdy plik ma błędy; poziom nie jest wtedy budowany.

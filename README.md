@@ -150,7 +150,7 @@ Scena `Assets/Scenes/Arena.unity`:
   - `StartPanel`: pole `NameInput` (TMP Input Field), przycisk `StartButton` (On Click → `PlayerNameForm.OnStartClicked`) i `ErrorText` na komunikaty o błędach;
 - `EventSystem` z `InputSystemUIInputModule` (obsługa myszy i klawiatury w UI przez Input System).
 
-Plik `Assets/Levels/level1.txt`: mapa 7 × 12, po jednym znaku na komórkę (`#` ściana, `.` puste pole, `C` moneta, `P` start gracza).
+Plik `Assets/Levels/level1.txt` (od zadania 6 ★ w `Assets/Resources/Levels/`): mapa 7 × 12, po jednym znaku na komórkę (`#` ściana, `.` puste pole, `C` moneta, `P` start gracza).
 
 Skrypty w `Assets/Scripts`:
 
@@ -162,13 +162,19 @@ Skrypty w `Assets/Scripts`:
 
 Sterowanie: doszedł klawisz `L` – dziennik zebranych monet w konsoli.
 
+### Zadania dodatkowe
+
+- Wybór poziomu (zadanie 6): poziomy leżą w `Assets/Resources/Levels/` (`level1.txt` przeniesiony razem z plikiem `.meta`, więc referencja w `LevelLoader` została, oraz nowy `level2.txt` z przegrodą w środku i przeszkodą przy prawej ścianie). Póki widać `StartPanel`, klawisze `1` i `2` wczytują poziom przez `LevelLoader.LoadLevel(number)`: nazwa pliku powstaje z numeru (`$"Levels/level{number}"`), a `Resources.Load<TextAsset>` szuka go bez rozszerzenia. Poprzednie ściany i monety są usuwane, gracz trafia na nowe `P`, a liczba monet do wygranej się aktualizuje. Napis `LevelLabel` na panelu pokazuje bieżący poziom. Gdy pole nazwy ma fokus, cyfry trafiają do nazwy, a nie zmieniają poziomu.
+
+Sterowanie: `1` / `2` – wybór poziomu przed startem (kliknij poza polem nazwy).
+
 ## Struktura folderów
 
 ```
 Assets/
   Materials/   materiały M_Floor, M_Player, M_Coin, M_Wall, M_Arrow
-  Levels/      poziomy w plikach tekstowych
   Prefabs/     prefab monety, jego warianty i prefab ściany
+  Resources/   Levels/: poziomy w plikach tekstowych
   Scenes/      scena Arena
   Scripts/     skrypty C#
   Settings/    ustawienia URP z szablonu

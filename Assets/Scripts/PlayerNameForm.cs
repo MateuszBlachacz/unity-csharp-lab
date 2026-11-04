@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 
 // Zadanie 4 (L5): nazwa gracza wpisywana przed startem. Do czasu poprawnej nazwy gra stoi.
@@ -11,6 +12,9 @@ public class PlayerNameForm : MonoBehaviour
     [SerializeField] private TMP_InputField nameInput;
     [SerializeField] private TMP_Text errorText;
     [SerializeField] private GameScore score;
+    // Zadanie 6 ★: wybór poziomu klawiszami 1 i 2, póki panel jest widoczny.
+    [SerializeField] private LevelLoader levelLoader;
+    [SerializeField] private TMP_Text levelLabel;
 
     private void Awake()
     {
@@ -24,6 +28,37 @@ public class PlayerNameForm : MonoBehaviour
         {
             uiModule.AssignDefaultActions();
         }
+    }
+
+    private void Start()
+    {
+        ShowLevel();
+    }
+
+    private void Update()
+    {
+        // Gdy pole nazwy ma fokus, cyfry są częścią nazwy (np. ola_2), a nie wyborem poziomu.
+        if (nameInput.isFocused)
+        {
+            return;
+        }
+
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame)
+        {
+            levelLoader.LoadLevel(1);
+            ShowLevel();
+        }
+        else if (keyboard.digit2Key.wasPressedThisFrame || keyboard.numpad2Key.wasPressedThisFrame)
+        {
+            levelLoader.LoadLevel(2);
+            ShowLevel();
+        }
+    }
+
+    private void ShowLevel()
+    {
+        levelLabel.text = $"Poziom {levelLoader.CurrentLevel}  (zmiana: klawisze 1 i 2)";
     }
 
     // Podpięta w Inspectorze przycisku Start: On Click ().
