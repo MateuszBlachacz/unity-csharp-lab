@@ -91,3 +91,7 @@ Docs/          notatki do laboratoriów
 Packages/      lista pakietów
 ProjectSettings/
 ```
+
+## Przykłady z wykładów
+
+- Wykład 3 (klasy, struktury, dziedziczenie i interfejsy): [Assets/Wyklady/Wyk3/README.md](Assets/Wyklady/Wyk3/README.md), osobny folder z własną sceną, niezależny od gry z laboratoriów.
