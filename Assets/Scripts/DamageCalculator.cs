@@ -14,7 +14,7 @@ public class DamageCalculator : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             Hit();
         }

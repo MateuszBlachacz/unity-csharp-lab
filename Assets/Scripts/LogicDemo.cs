@@ -13,7 +13,7 @@ public class LogicDemo : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.kKey.wasPressedThisFrame)
+        if (Keyboard.current != null && Keyboard.current.kKey.wasPressedThisFrame)
         {
             Report();
         }

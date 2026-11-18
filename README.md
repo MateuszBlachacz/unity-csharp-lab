@@ -168,12 +168,37 @@ Sterowanie: doszedł klawisz `L` – dziennik zebranych monet w konsoli.
 
 Sterowanie: `1` / `2` – wybór poziomu przed startem (kliknij poza polem nazwy).
 
+## Laboratorium 6
+
+Scena `Assets/Scenes/Arena.unity`:
+
+- `Player`: nowe komponenty `Health` (100 punktów, *Destroy On Death* wyłączone, śmierć gracza dojdzie w L8) i `PlayerShooter` z prefabem pocisku;
+- `Dummy`: czerwony sześcian (materiał `M_Dummy`) z `BoxCollider` i `Health` (50 punktów, znika po śmierci), stoi na polu wolnym w obu poziomach (wiersz 6, kolumna 8 pliku poziomu);
+- `Demos`: doszedł skrypt `ValueVsReferenceDemo` (obiekt nadal jest wyłączony; włącz go, żeby zobaczyć wynik zadania 5 w konsoli).
+
+Prefaby i materiały:
+
+- `Assets/Prefabs/Projectile.prefab`: kula o skali 0,25 z materiałem `M_Projectile` (biały), `SphereCollider` z *Is Trigger*, `Rigidbody` kinematyczny bez grawitacji i skrypt `Projectile`;
+- prefab `Wall` ma tag `Wall` od L4, po nim pocisk rozpoznaje ściany.
+
+Skrypty w `Assets/Scripts`:
+
+- `Health` (zadanie 1): `maxHealth` i `destroyOnDeath` w Inspectorze; `Current { get; private set; }` daje odczyt z zewnątrz i zapis tylko w klasie, więc `health.Current = 100;` w innym skrypcie kończy się błędem kompilatora CS0272. `TakeDamage` pomija wartości ujemne i zero oraz nie schodzi poniżej 0, `Heal` nie przekracza `Max`, `IsDead` zwraca `true` przy zerze. Każda zmiana zdrowia trafia do konsoli;
+- `WeaponStats` (zadanie 2): zwykła klasa z `[System.Serializable]` (bez `MonoBehaviour`) z prywatnymi polami `damage` 10, `shotsPerSecond` 4, `projectileSpeed` 15 i `projectileLifetime` 2 oraz właściwościami tylko do odczytu. Ma konstruktor bezparametrowy (z niego korzysta Unity) i konstruktor z czterema parametrami, właściwość `Cooldown` = 1 / `shotsPerSecond` i `ToString()`, które `PlayerShooter` wypisuje na starcie (`Broń gracza: 10 obr., 4 strz./s, …`). W Inspectorze `PlayerShooter` widać ją jako rozwijaną sekcję *Stats*;
+- `PlayerShooter` (zadanie 3): w `Update` zamienia pozycję kursora na promień z kamery i przecina go z płaszczyzną podłogi (`Plane.Raycast`); obrót w poziomie ustawia ciału przez `rb.MoveRotation` w `FixedUpdate`. Przytrzymany lewy przycisk myszy strzela seryjnie, a pole `nextShotTime` ogranicza tempo do `Cooldown` (4 strzały na sekundę, czyli 8 pocisków w 2 sekundy). Pocisk powstaje 0,8 przed graczem na wysokości 1 nad podłogą. Póki widać panel startowy (`timeScale` = 0), gracz nie celuje i nie strzela;
+- `Projectile` (zadanie 4): `Init(damage, velocity, lifetime)` wywoływane zaraz po `Instantiate` zapamiętuje obrażenia i prędkość oraz planuje `Destroy(gameObject, lifetime)`. Ruch przez `rb.MovePosition` w `FixedUpdate`. W `OnTriggerEnter` pomija gracza (tag `Player`), obiekt z `Health` rani i znika, na ścianie (tag `Wall`) znika, a monety mija. `Dummy` znika po pięciu trafieniach;
+- `ValueVsReferenceDemo` (zadanie 5): struktura `DamageInfoStruct` i klasa `DamageInfoClass` z polami `amount` i `direction`, trzy wersje `SetAmount` (struktura, klasa, struktura przez `ref`). W konsoli: struktura bez `ref` – 10, klasa – 999, struktura z `ref` – 999. Komentarz nad klasą zawiera przewidywanie i wyjaśnienie (kopia wartości a kopia referencji);
+- `CoinFinder`: gracz się teraz obraca, więc strzałka jest ustawiana we współrzędnych świata (`arrow.position`), a nie lokalnych;
+- `PlayerMovement`, `GameScore`, `PlayerNameForm`, `DamageCalculator`, `LogicDemo`: sprawdzają, czy `Keyboard.current` nie jest `null` (bez podłączonej klawiatury skrypty nie rzucają wyjątku).
+
+Sterowanie: doszła mysz – kursor wskazuje kierunek patrzenia gracza, lewy przycisk strzela (przytrzymanie – ogień seryjny).
+
 ## Struktura folderów
 
 ```
 Assets/
-  Materials/   materiały M_Floor, M_Player, M_Coin, M_Wall, M_Arrow
-  Prefabs/     prefab monety, jego warianty i prefab ściany
+  Materials/   materiały M_Floor, M_Player, M_Coin, M_Wall, M_Arrow, M_Dummy, M_Projectile
+  Prefabs/     prefab monety, jego warianty, prefab ściany i prefab pocisku
   Resources/   Levels/: poziomy w plikach tekstowych
   Scenes/      scena Arena
   Scripts/     skrypty C#

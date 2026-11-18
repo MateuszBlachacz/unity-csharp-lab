@@ -33,11 +33,18 @@ public class GameScore : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.tabKey.wasPressedThisFrame)
+        Keyboard keyboard = Keyboard.current;
+        // Bez podłączonej klawiatury Keyboard.current to null.
+        if (keyboard == null)
+        {
+            return;
+        }
+
+        if (keyboard.tabKey.wasPressedThisFrame)
         {
             LogCoinStats();
         }
-        if (Keyboard.current.lKey.wasPressedThisFrame)
+        if (keyboard.lKey.wasPressedThisFrame)
         {
             PrintLog();
         }

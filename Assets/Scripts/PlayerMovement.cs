@@ -41,7 +41,8 @@ public class PlayerMovement : MonoBehaviour
         // daje już długość 1. ClampMagnitude skraca tylko dłuższe wektory (np. w trybie Digital).
         Vector2 input = Vector2.ClampMagnitude(moveAction.ReadValue<Vector2>(), 1f);
 
-        bool shiftHeld = Keyboard.current.leftShiftKey.isPressed;
+        // Bez podłączonej klawiatury Keyboard.current to null.
+        bool shiftHeld = Keyboard.current != null && Keyboard.current.leftShiftKey.isPressed;
         bool isMoving = input.sqrMagnitude > 0f;
         bool sprinting = shiftHeld && isMoving && !exhausted;
         float currentSpeed = sprinting ? speed * sprintMultiplier : speed;

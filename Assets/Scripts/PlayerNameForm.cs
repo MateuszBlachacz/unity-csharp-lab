@@ -23,7 +23,7 @@ public class PlayerNameForm : MonoBehaviour
         errorText.text = "";
 
         // Moduł UI bez przypisanego zestawu akcji dostaje akcje domyślne (mysz, klawiatura).
-        InputSystemUIInputModule uiModule = FindFirstObjectByType<InputSystemUIInputModule>();
+        InputSystemUIInputModule uiModule = FindAnyObjectByType<InputSystemUIInputModule>();
         if (uiModule != null && uiModule.actionsAsset == null)
         {
             uiModule.AssignDefaultActions();
@@ -44,6 +44,11 @@ public class PlayerNameForm : MonoBehaviour
         }
 
         Keyboard keyboard = Keyboard.current;
+        if (keyboard == null)
+        {
+            return;
+        }
+
         if (keyboard.digit1Key.wasPressedThisFrame || keyboard.numpad1Key.wasPressedThisFrame)
         {
             levelLoader.LoadLevel(1);

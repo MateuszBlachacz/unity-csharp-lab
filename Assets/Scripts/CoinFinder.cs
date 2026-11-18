@@ -39,9 +39,11 @@ public class CoinFinder : MonoBehaviour
         {
             arrow.rotation = Quaternion.LookRotation(dir);
             // Strzałka krąży wokół gracza na stałej wysokości, żeby zawsze była wysunięta
-            // w stronę monety. Gracz się nie obraca, więc kierunek świata działa też lokalnie.
+            // w stronę monety. Od L6 gracz obraca się za kursorem, więc przesunięcie liczymy
+            // we współrzędnych świata, a nie lokalnych.
             Vector3 offset = dir.normalized * arrowDistance;
-            arrow.localPosition = new Vector3(offset.x, arrow.localPosition.y, offset.z);
+            arrow.position = new Vector3(transform.position.x + offset.x, arrow.position.y,
+                                         transform.position.z + offset.z);
         }
     }
 }
