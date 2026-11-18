@@ -9,9 +9,27 @@ public class Projectile : MonoBehaviour
     private int damage;
     private Vector3 velocity;
 
+    // Zadanie 6 ★: liczba istniejących pocisków. Pole statyczne należy do klasy,
+    // a nie do obiektu, więc wszystkie pociski zmieniają ten sam licznik.
+    public static int AliveCount { get; private set; }
+
+    // Przy wyłączonym Domain Reload pola statyczne zachowują wartość między uruchomieniami
+    // gry w edytorze, dlatego zerujemy licznik przed wczytaniem sceny.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetCount()
+    {
+        AliveCount = 0;
+    }
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        AliveCount++;
+    }
+
+    private void OnDestroy()
+    {
+        AliveCount--;
     }
 
     // Wywoływana przez PlayerShooter zaraz po Instantiate, przed pierwszym FixedUpdate.

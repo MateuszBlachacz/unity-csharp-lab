@@ -193,6 +193,10 @@ Skrypty w `Assets/Scripts`:
 
 Sterowanie: doszła mysz – kursor wskazuje kierunek patrzenia gracza, lewy przycisk strzela (przytrzymanie – ogień seryjny).
 
+### Zadania dodatkowe
+
+- Licznik pocisków (zadanie 6): `Projectile` ma statyczną właściwość `AliveCount { get; private set; }`, zwiększaną w `Awake` i zmniejszaną w `OnDestroy`, więc pokazuje liczbę pocisków istniejących w danej chwili (przy 4 strzałach na sekundę i czasie życia 2 s najwyżej 8). Metoda z atrybutem `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]` zeruje licznik przy każdym starcie gry, także przy wyłączonym *Domain Reload*. `Hud` dopisuje do górnego paska `Pociski: n`.
+
 ## Struktura folderów
 
 ```

@@ -19,7 +19,8 @@ public class Hud : MonoBehaviour
         float time = score.IsWon ? score.WinTime : Time.timeSinceLevelLoad;
         // D4 dopełnia wynik zerami do 4 cyfr, F1 to jedna cyfra po przecinku
         // (separator zależy od ustawień regionalnych systemu).
-        hudText.text = $"Wynik: {score.GetScore():D4}   Czas: {time:F1} s";
+        // Zadanie 6 ★ (L6): liczba pocisków odczytana z właściwości statycznej klasy Projectile.
+        hudText.text = $"Wynik: {score.GetScore():D4}   Czas: {time:F1} s   Pociski: {Projectile.AliveCount}";
 
         if (score.IsWon && !winText.gameObject.activeSelf)
         {
