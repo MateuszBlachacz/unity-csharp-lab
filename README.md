@@ -212,3 +212,7 @@ Wyklady/       przykłady kodu z wykładów 1 i 2 (poza Assets, Unity ich nie ko
 Packages/      lista pakietów
 ProjectSettings/
 ```
+
+## Przykłady z wykładów
+
+- Wykład 4 (typy generyczne, kolekcje, delegaty i zdarzenia): [Assets/Wyklady/Wyk4/README.md](Assets/Wyklady/Wyk4/README.md), osobny folder z własną sceną, niezależny od gry z laboratoriów.
