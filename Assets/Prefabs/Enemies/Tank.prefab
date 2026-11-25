@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2614306600929894205
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 52378276802857947, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5158139881945195580, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      propertyPath: m_Name
+      value: Tank
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5158139881945195580, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5920905040288885077}
+    - targetCorrespondingSourceObject: {fileID: 5158139881945195580, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2742106500524536179}
+  m_SourcePrefab: {fileID: 100100000, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+--- !u!1 &7192959870276795137 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5158139881945195580, guid: 464ce491311400747bce1f5b98011ceb, type: 3}
+  m_PrefabInstance: {fileID: 2614306600929894205}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5920905040288885077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7192959870276795137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c090e2448ab652841831a467bb4cd758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArmoredHealth
+  maxHealth: 60
+  destroyOnDeath: 1
+  armor: 5
+--- !u!114 &2742106500524536179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7192959870276795137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6cf62f02875a1441aa4dda1e62ac18a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Tank
+  speed: 1.2
+  contactDamage: 20
+  damageInterval: 1

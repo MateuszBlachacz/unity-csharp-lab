@@ -226,6 +226,12 @@ Skrypty w `Assets/Scripts`:
 
 Sterowanie: doszedł klawisz `E` – opis wszystkich przeciwników w konsoli.
 
+### Zadania dodatkowe
+
+- `ArmoredHealth` (zadanie 6): dziedziczy po `Health` i nadpisuje `TakeDamage`: każde trafienie jest mniejsze o `armor` (domyślnie 5), ale wynosi co najmniej 1; wartości ujemne i zero przechodzą bez zmian, więc `Health` dalej je pomija. Pocisk gracza (10) odbiera mu 5 punktów.
+- `Tank` (zadanie 6): `Tank : Chaser` bez własnego ruchu – dziedziczy gonienie i obrażenia przy zetknięciu, a różni się wartościami w prefabie. `Describe()` dopisuje „opancerzony” i wartość pancerza. Prefab `Assets/Prefabs/Enemies/Tank.prefab` to wariant dużego kolosa z folderu `Enemy` z `ArmoredHealth` (60 punktów, pancerz 5) zamiast `Health`, prędkością 1,2 i obrażeniami 20 co sekundę; doszedł do tablicy spawnera.
+- `ExplosiveBarrel` (zadanie 7): implementuje `IDamageable` bez dziedziczenia po `Enemy` i bez `Health`. Pierwsze trafienie ustawia `exploded` i rani o 25 każdy `IDamageable` w kuli o promieniu 2 (`Physics.OverlapSphere`, każdy obiekt tylko raz), a potem beczka znika. Druga beczka trafiona wybuchem wybucha łańcuchowo, a flaga `exploded` nie pozwala im ranić się w nieskończoność. Prefab `ExplosiveBarrel` to wariant beczki z folderu `Enemy` z kinematycznym `Rigidbody` (przeciwnicy jej nie przepychają). Na arenie stoją dwie: `Barrels/Barrel_1` (wiersz 2, kolumna 6) i `Barrel_2` (wiersz 4, kolumna 7), wolne w obu poziomach.
+
 ### Gotowi przeciwnicy (folder `Assets/Enemy`)
 
 W tej gałęzi jest folder `Assets/Enemy` z pięcioma gotowymi przeciwnikami zbudowanymi z prymitywów: `Chaser` (czerwona kapsuła z pazurami), `Shooter` (fioletowa kostka z działkiem), `Tank` (do zadania 6 ★), `Swarmer` (mała kolczasta kulka) i `Barrel` (beczka do zadania 7 ★). Każdy ma `Rigidbody` (nie kinematyczny, zablokowane obroty X, Y, Z), collider, `Animator` z animacjami `Idle`, `Move`, `Attack` i `Hit` (beczka: `Idle` i `Hit`) oraz skrypt `EnemyAnimator`. W tym samym folderze są materiały, kontrolery animacji, scena pokazowa `EnemyShowcase` i README. Folder nie zależy od innych skryptów projektu, więc można go skopiować do własnego projektu i podpiąć prefaby do skryptów.
