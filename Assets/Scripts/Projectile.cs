@@ -1,13 +1,16 @@
 using UnityEngine;
 
-// Zadanie 4 (L6): pocisk leci ze stałą prędkością, rani obiekty z Health i znika
+// Zadanie 4 (L6): pocisk leci ze stałą prędkością, rani trafiony obiekt i znika
 // po trafieniu albo po czasie życia.
+// L7: rani wszystko, co implementuje IDamageable; pociski gracza pomijają gracza,
+// a pociski przeciwników pomijają przeciwników.
 [RequireComponent(typeof(Rigidbody))]
 public class Projectile : MonoBehaviour
 {
     private Rigidbody rb;
     private int damage;
     private Vector3 velocity;
+    private bool fromPlayer;
 
     // Zadanie 6 ★: liczba istniejących pocisków. Pole statyczne należy do klasy,
     // a nie do obiektu, więc wszystkie pociski zmieniają ten sam licznik.
@@ -32,11 +35,13 @@ public class Projectile : MonoBehaviour
         AliveCount--;
     }
 
-    // Wywoływana przez PlayerShooter zaraz po Instantiate, przed pierwszym FixedUpdate.
-    public void Init(int damage, Vector3 velocity, float lifetime)
+    // Wywoływana przez strzelającego (PlayerShooter, Shooter) zaraz po Instantiate,
+    // przed pierwszym FixedUpdate.
+    public void Init(int damage, Vector3 velocity, float lifetime, bool fromPlayer)
     {
         this.damage = damage;
         this.velocity = velocity;
+        this.fromPlayer = fromPlayer;
         Destroy(gameObject, lifetime);
     }
 
@@ -48,15 +53,20 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Pocisk powstaje tuż przy graczu, więc gracza pomijamy.
-        if (other.CompareTag("Player"))
+        // Pocisk gracza powstaje tuż przy graczu i nie może go ranić; pocisk przeciwnika
+        // nie rani przeciwników (także tego, który go wystrzelił).
+        if (fromPlayer && other.CompareTag("Player"))
+        {
+            return;
+        }
+        if (!fromPlayer && other.GetComponentInParent<Enemy>() != null)
         {
             return;
         }
 
-        if (other.TryGetComponent(out Health health))
+        if (other.TryGetComponent(out IDamageable target))
         {
-            health.TakeDamage(damage);
+            target.TakeDamage(damage);
             Destroy(gameObject);
         }
         else if (other.CompareTag("Wall"))

@@ -201,7 +201,32 @@ Sterowanie: doszła mysz – kursor wskazuje kierunek patrzenia gracza, lewy prz
 
 ## Laboratorium 7
 
-### Gotowi przeciwnicy
+Scena `Assets/Scenes/Arena.unity`:
+
+- `GameManager`: nowy komponent `EnemySpawner` z prefabami `Chaser` i `Shooter` i czterema punktami spawnu;
+- `EnemySpawnPoints`: puste obiekty `EnemySpawn_1`–`EnemySpawn_4` w komórkach wolnych w obu poziomach i z dala od startu gracza (wiersz 1, kolumny 6 i 10; wiersz 4, kolumna 10; wiersz 5, kolumna 6);
+- `Player` ma tag `Player`, po nim przeciwnicy go znajdują.
+
+Prefaby w `Assets/Prefabs/Enemies` to warianty prefabów z folderu `Assets/Enemy` (opis niżej), więc wygląd i animacje biorą z niego, a same dokładają skrypty z laboratorium:
+
+- `Chaser`: wariant czerwonej kapsuły, `Health` 30 punktów i skrypt `Chaser` (prędkość 2,5);
+- `Shooter`: wariant fioletowej kostki, `Health` 20 punktów i skrypt `Shooter` (prędkość 2, prefab pocisku `Projectile`).
+
+Dzięki wariantom folder `Assets/Enemy` nie odwołuje się do skryptów projektu i dalej można go skopiować do innego projektu. Collidery `Shooter` (0,9 × 1,6 × 0,9) i `Tank` (promień 0,5) w folderze `Enemy` są węższe niż korytarz o szerokości 1, bo szersze zahaczały o ściany i przeciwnik stał w miejscu.
+
+Skrypty w `Assets/Scripts`:
+
+- `IDamageable` (zadanie 1): interfejs z jedną metodą `TakeDamage(int amount)`;
+- `Health`: implementuje `IDamageable`, a `TakeDamage` jest `virtual` (przyda się w zadaniu 6);
+- `Projectile`: rani każdy obiekt z `IDamageable` (w kodzie pocisku nie ma już słowa `Health`). `Init` dostał parametr `bool fromPlayer`: pocisk gracza pomija gracza, a pocisk przeciwnika pomija obiekty z komponentem `Enemy`, także tego, który go wystrzelił. `PlayerShooter` przekazuje `true`;
+- `Enemy` (zadanie 2): klasa abstrakcyjna z chronionymi polami `speed`, `player`, `rb` i `anim`. W `Awake` (wirtualnym) pobiera `Rigidbody`, opcjonalny `EnemyAnimator` i szuka gracza po tagu. `FixedUpdate` wywołuje abstrakcyjną `Act()`, gdy gracz istnieje. `Describe()` jest wirtualna. Metody pomocnicze `FlatDirectionToPlayer`, `MoveHorizontally` i `FaceDirection` dają ruch tylko w poziomie. Komponentu `Enemy` nie da się dodać do obiektu, bo klasa jest abstrakcyjna;
+- `Chaser` (zadanie 3): w `Act()` ustawia prędkość `Rigidbody` w stronę gracza i obraca się przodem do niego, więc ściany zatrzymują go jak każde ciało fizyczne. W `OnCollisionStay` z graczem zadaje 10 obrażeń najwyżej raz na sekundę (pole `nextDamageTime`, jak przy strzelaniu w L6) i włącza animację ataku. `Describe()` dopisuje do `base.Describe()` „goni gracza”;
+- `Shooter` (zadanie 4): nadpisuje `Awake` z wywołaniem `base.Awake()`. Utrzymuje odległość 5 ± 0,5 od gracza (dalej podchodzi, bliżej się cofa, w strefie stoi), obraca się do gracza i co 2 s strzela prefabem `Projectile` (10 obrażeń, 8 j/s, czas życia 3 s) z `fromPlayer = false`. Pierwszy strzał pada 2 s po pojawieniu się;
+- `EnemySpawner` (zadanie 5): tablice `Enemy[] enemyPrefabs` i `Transform[] spawnPoints`. Co 4 s tworzy losowego przeciwnika w losowym punkcie, jeśli na scenie jest ich mniej niż 6 (`FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length`). Licznik czasu rośnie o `Time.deltaTime`, więc przed zamknięciem `StartPanel` (`timeScale` = 0) nic nie powstaje. Klawisz `E` wypisuje `Describe()` każdego przeciwnika; pętla operuje typem `Enemy`, a w konsoli widać teksty z `Chaser` i `Shooter` (polimorfizm).
+
+Sterowanie: doszedł klawisz `E` – opis wszystkich przeciwników w konsoli.
+
+### Gotowi przeciwnicy (folder `Assets/Enemy`)
 
 W tej gałęzi jest folder `Assets/Enemy` z pięcioma gotowymi przeciwnikami zbudowanymi z prymitywów: `Chaser` (czerwona kapsuła z pazurami), `Shooter` (fioletowa kostka z działkiem), `Tank` (do zadania 6 ★), `Swarmer` (mała kolczasta kulka) i `Barrel` (beczka do zadania 7 ★). Każdy ma `Rigidbody` (nie kinematyczny, zablokowane obroty X, Y, Z), collider, `Animator` z animacjami `Idle`, `Move`, `Attack` i `Hit` (beczka: `Idle` i `Hit`) oraz skrypt `EnemyAnimator`. W tym samym folderze są materiały, kontrolery animacji, scena pokazowa `EnemyShowcase` i README. Folder nie zależy od innych skryptów projektu, więc można go skopiować do własnego projektu i podpiąć prefaby do skryptów.
 
@@ -235,7 +260,7 @@ W tej gałęzi jest folder `Assets/Enemy` z pięcioma gotowymi przeciwnikami zbu
 Assets/
   Enemy/       gotowi przeciwnicy z L7: prefaby, materiały, animacje, EnemyAnimator, scena EnemyShowcase
   Materials/   materiały M_Floor, M_Player, M_Coin, M_Wall, M_Arrow, M_Dummy, M_Projectile
-  Prefabs/     prefab monety, jego warianty, prefab ściany i prefab pocisku
+  Prefabs/     prefab monety, jego warianty, prefab ściany, prefab pocisku i Enemies/: przeciwnicy L7
   Resources/   Levels/: poziomy w plikach tekstowych
   Scenes/      scena Arena
   Scripts/     skrypty C#

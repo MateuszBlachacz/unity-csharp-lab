@@ -84,6 +84,6 @@ public class PlayerShooter : MonoBehaviour
         spawn.y = muzzleHeight;
         // Instantiate z komponentem prefabu zwraca od razu komponent nowego obiektu.
         Projectile p = Instantiate(projectilePrefab, spawn, targetRotation);
-        p.Init(stats.Damage, forward * stats.ProjectileSpeed, stats.ProjectileLifetime);
+        p.Init(stats.Damage, forward * stats.ProjectileSpeed, stats.ProjectileLifetime, true);
     }
 }

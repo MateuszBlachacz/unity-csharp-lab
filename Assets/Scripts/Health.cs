@@ -2,7 +2,8 @@ using UnityEngine;
 
 // Zadanie 1 (L6): zdrowie obiektu. Bieżącą wartość można z zewnątrz tylko odczytać,
 // zmienia się wyłącznie przez TakeDamage i Heal.
-public class Health : MonoBehaviour
+// Zadanie 1 (L7): Health implementuje IDamageable, więc pocisk rani go przez interfejs.
+public class Health : MonoBehaviour, IDamageable
 {
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private bool destroyOnDeath = true;
@@ -18,7 +19,8 @@ public class Health : MonoBehaviour
         Current = maxHealth;
     }
 
-    public void TakeDamage(int amount)
+    // virtual (L7): klasa pochodna może zmienić sposób przyjmowania obrażeń.
+    public virtual void TakeDamage(int amount)
     {
         // Ujemne obrażenia leczyłyby, dlatego je pomijamy; martwego nie ranimy drugi raz.
         if (amount <= 0 || IsDead)
