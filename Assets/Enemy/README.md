@@ -20,15 +20,29 @@ Każdy prefab ma `Rigidbody` (nie kinematyczny, zablokowane obroty X, Y, Z), col
 Scena `EnemyShowcase` pokazuje wszystkich naraz – po wciśnięciu Play przełączają się
 same między staniem, biegiem, atakiem i trafieniem.
 
-## Jak podłączyć
+## Jak zaimportować do swojego projektu
 
-1. Skopiuj folder `Enemy` do `Assets`.
-2. Otwórz prefab (np. `Chaser`) i dodaj swoje komponenty: `Health` (w `Tank` – `ArmoredHealth`)
-   i swój skrypt przeciwnika (`Chaser`, `Shooter`...). Beczka dostaje tylko swój skrypt z `IDamageable`.
-3. Przeciągnij prefaby do tablicy `enemyPrefabs` w `EnemySpawner`.
+1. **Pobierz folder.** Na stronie <https://github.com/MateuszBlachacz/unity-csharp-lab/tree/lab-07> kliknij **Code → Download ZIP** i rozpakuj archiwum. Potrzebny jest tylko folder `Assets/Enemy`. Jeśli masz sklonowane repozytorium kursu (osobno od swojego projektu), przełącz je na gałąź `lab-07` (`git fetch origin`, `git checkout lab-07`) i skopiuj folder stamtąd.
+2. **Skopiuj go do projektu.** Skopiuj cały folder `Enemy` **razem z plikami `.meta`** do folderu `Assets` swojego projektu `Arena` i wróć do Unity. Po chwili w oknie *Project* pojawi się `Assets/Enemy`. Bez plików `.meta` prefaby stracą materiały i animacje. Projekt musi używać URP (szablon *Universal 3D*); inaczej materiały będą różowe.
+3. **Obejrzyj przeciwników.** Otwórz scenę `Assets/Enemy/EnemyShowcase` i naciśnij **Play**: przeciwnicy sami pokazują wszystkie animacje. Potem wróć do sceny `Arena`.
+4. **Dodaj swoje skrypty do prefabów.** Prefaby celowo nie mają `Health` ani skryptów przeciwników, bo te piszesz na zajęciach (gdyby były w prefabie, po skopiowaniu do innego projektu odwołania by się zepsuły). Kliknij dwukrotnie prefab, żeby otworzyć go w trybie edycji prefabu, i przez **Add Component** dodaj:
 
-Prefaby celowo nie mają `Health` ani skryptów przeciwników – te piszesz sam na zajęciach,
-a gdyby były w prefabie, po skopiowaniu do innego projektu odwołania by się zepsuły.
+   | Prefab | Dodaj |
+   | --- | --- |
+   | `Chaser`, `Swarmer` | `Health` i `Chaser` |
+   | `Shooter` | `Health` i `Shooter` |
+   | `Tank` | `ArmoredHealth` i `Tank` |
+   | `Barrel` | swój skrypt beczki z `IDamageable` (bez `Health`) |
+
+   Nie usuwaj komponentów `Animator` i `EnemyAnimator`, które już są na prefabach.
+5. **Podłącz prefaby do spawnera.** Zaznacz obiekt z `EnemySpawner` i przeciągnij prefaby z `Assets/Enemy` do tablicy `Enemy Prefabs`. Pole typu `Enemy[]` przyjmie prefab dopiero wtedy, gdy ma komponent dziedziczący po `Enemy` (krok 4).
+6. **Włącz animację ataku.** Bieg i trafienie animują się same (`EnemyAnimator` patrzy na prędkość `Rigidbody` i spadek `Health`). Animację ataku włącz w miejscu, w którym przeciwnik zadaje obrażenia albo strzela:
+
+   ```csharp
+   GetComponent<EnemyAnimator>().PlayAttack();
+   ```
+
+   W beczce, która nie ma `Health`, trafienie włączasz ręcznie: `GetComponent<EnemyAnimator>().PlayHit();`.
 
 ## Animacje
 

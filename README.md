@@ -25,6 +25,8 @@ Każde laboratorium ma osobną gałąź nazwaną od jego numeru:
 | `lab-03` | Laboratorium 3: zbieranie monet i reguły gry      |
 | `lab-04` | Laboratorium 4: tablice, arena z tablicy 2D       |
 | `lab-05` | Laboratorium 5: poziom z pliku tekstowego i HUD   |
+| `lab-06` | Laboratorium 6: zdrowie, broń i pociski           |
+| `lab-07` | Laboratorium 7: gotowi przeciwnicy z animacjami   |
 
 Kolejne laboratoria trafiają na gałęzie `lab-02`, `lab-03` itd., odgałęzione od poprzedniego laboratorium.
 
@@ -197,10 +199,41 @@ Sterowanie: doszła mysz – kursor wskazuje kierunek patrzenia gracza, lewy prz
 
 - Licznik pocisków (zadanie 6): `Projectile` ma statyczną właściwość `AliveCount { get; private set; }`, zwiększaną w `Awake` i zmniejszaną w `OnDestroy`, więc pokazuje liczbę pocisków istniejących w danej chwili (przy 4 strzałach na sekundę i czasie życia 2 s najwyżej 8). Metoda z atrybutem `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]` zeruje licznik przy każdym starcie gry, także przy wyłączonym *Domain Reload*. `Hud` dopisuje do górnego paska `Pociski: n`.
 
+## Laboratorium 7
+
+### Gotowi przeciwnicy
+
+W tej gałęzi jest folder `Assets/Enemy` z pięcioma gotowymi przeciwnikami zbudowanymi z prymitywów: `Chaser` (czerwona kapsuła z pazurami), `Shooter` (fioletowa kostka z działkiem), `Tank` (do zadania 6 ★), `Swarmer` (mała kolczasta kulka) i `Barrel` (beczka do zadania 7 ★). Każdy ma `Rigidbody` (nie kinematyczny, zablokowane obroty X, Y, Z), collider, `Animator` z animacjami `Idle`, `Move`, `Attack` i `Hit` (beczka: `Idle` i `Hit`) oraz skrypt `EnemyAnimator`. W tym samym folderze są materiały, kontrolery animacji, scena pokazowa `EnemyShowcase` i README. Folder nie zależy od innych skryptów projektu, więc można go skopiować do własnego projektu i podpiąć prefaby do skryptów.
+
+### Jak zaimportować przeciwników do swojego projektu
+
+1. **Pobierz folder.** Na stronie <https://github.com/MateuszBlachacz/unity-csharp-lab/tree/lab-07> kliknij **Code → Download ZIP** i rozpakuj archiwum. Potrzebny jest tylko folder `Assets/Enemy`. Jeśli masz sklonowane repozytorium kursu (osobno od swojego projektu), przełącz je na gałąź `lab-07` (`git fetch origin`, `git checkout lab-07`) i skopiuj folder stamtąd.
+2. **Skopiuj go do projektu.** Skopiuj cały folder `Enemy` **razem z plikami `.meta`** do folderu `Assets` swojego projektu `Arena` i wróć do Unity. Po chwili w oknie *Project* pojawi się `Assets/Enemy`. Bez plików `.meta` prefaby stracą materiały i animacje. Projekt musi używać URP (szablon *Universal 3D*); inaczej materiały będą różowe.
+3. **Obejrzyj przeciwników.** Otwórz scenę `Assets/Enemy/EnemyShowcase` i naciśnij **Play**: przeciwnicy sami pokazują wszystkie animacje. Potem wróć do sceny `Arena`.
+4. **Dodaj swoje skrypty do prefabów.** Prefaby celowo nie mają `Health` ani skryptów przeciwników, bo te piszesz na zajęciach (gdyby były w prefabie, po skopiowaniu do innego projektu odwołania by się zepsuły). Kliknij dwukrotnie prefab, żeby otworzyć go w trybie edycji prefabu, i przez **Add Component** dodaj:
+
+   | Prefab | Dodaj |
+   | --- | --- |
+   | `Chaser`, `Swarmer` | `Health` i `Chaser` |
+   | `Shooter` | `Health` i `Shooter` |
+   | `Tank` | `ArmoredHealth` i `Tank` |
+   | `Barrel` | swój skrypt beczki z `IDamageable` (bez `Health`) |
+
+   Nie usuwaj komponentów `Animator` i `EnemyAnimator`, które już są na prefabach.
+5. **Podłącz prefaby do spawnera.** Zaznacz obiekt z `EnemySpawner` i przeciągnij prefaby z `Assets/Enemy` do tablicy `Enemy Prefabs`. Pole typu `Enemy[]` przyjmie prefab dopiero wtedy, gdy ma komponent dziedziczący po `Enemy` (krok 4).
+6. **Włącz animację ataku.** Bieg i trafienie animują się same (`EnemyAnimator` patrzy na prędkość `Rigidbody` i spadek `Health`). Animację ataku włącz w miejscu, w którym przeciwnik zadaje obrażenia albo strzela:
+
+   ```csharp
+   GetComponent<EnemyAnimator>().PlayAttack();
+   ```
+
+   W beczce, która nie ma `Health`, trafienie włączasz ręcznie: `GetComponent<EnemyAnimator>().PlayHit();`.
+
 ## Struktura folderów
 
 ```
 Assets/
+  Enemy/       gotowi przeciwnicy z L7: prefaby, materiały, animacje, EnemyAnimator, scena EnemyShowcase
   Materials/   materiały M_Floor, M_Player, M_Coin, M_Wall, M_Arrow, M_Dummy, M_Projectile
   Prefabs/     prefab monety, jego warianty, prefab ściany i prefab pocisku
   Resources/   Levels/: poziomy w plikach tekstowych
